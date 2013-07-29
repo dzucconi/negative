@@ -2,7 +2,8 @@
 
 class Object
   def let() yield self end
-  def identity()  self end
+
+  def identity() self end
 end # Object
 
 class Hash
