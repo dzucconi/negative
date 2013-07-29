@@ -43,8 +43,8 @@ class Encoder
       end
     end
 
-    def run(filename, _filename)
-      output(File.read(filename), { filename: _filename })
+    def run(i, o)
+      output(File.read(i), { filename: o })
     end
   end # self
 end # Encoder
