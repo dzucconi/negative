@@ -1,17 +1,59 @@
 #!/usr/bin/env ruby
 
-begin
-  dir     = File.dirname(File.expand_path(__FILE__))
-  input   = ARGV[0]
+class Object
+  def let() yield self end
+  def identity()  self end
+end # Object
 
-  raise ArgumentError if input.nil?
+class Hash
+  def reverse_merge!(hsh)
+    merge!(hsh) { |key, l, r| l }
+  end
 
-  encoded   = File.read(input).unpack("C*").map { |x| " " * x }.join("\n")
-  reader    = %q{eval("%s".split(/\n/).map(&:size).pack("C*"))}
+  def over_reverse_merge!(hsh)
+    reject! { |k, v| v.nil? }.reverse_merge!(hsh)
+  end
+end # Hash
 
-  File.open(dir + "/_#{input}", "w") { |f| f << reader % encoded }
+class Decoder
+  DECODER = %q{eval("%s".split(/\n/).map(&:size).pack("C*"))}
 
-  puts "Output: _#{input}"
-rescue ArgumentError
-  puts "Argument missing: filename"
+  def self.decode(i)
+    i.split(/\n/).map(&:size).pack("C*")
+  end
+end # Decoder
+
+class Encoder
+  DIR = File.dirname(File.expand_path(__FILE__))
+
+  class << self
+    def encode(i)
+      i.unpack("C*").map { |x| " " * x }.join("\n")
+    end
+
+    def output(i, options={})
+      options.over_reverse_merge!({ filename: "output.rb" })
+
+      encode(i).let do |encoded|
+        File.open("#{DIR}/#{options[:filename]}", "w") do |file|
+          file << Decoder::DECODER % encoded
+        end
+
+        $stdout << "Output: #{options[:filename]}\n"
+      end
+    end
+
+    def run(filename, _filename)
+      output(File.read(filename), { filename: _filename })
+    end
+  end # self
+end # Encoder
+
+# Run
+unless $0 == "irb"
+  begin
+    Encoder.run($*[0], $*[1])
+  rescue ArgumentError
+    $stdout << "Argument missing: filename\n"
+  end
 end
