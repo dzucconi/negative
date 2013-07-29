@@ -12,10 +12,6 @@ class Hash
   def reverse_merge!(hsh)
     merge!(hsh) { |key, l, r| l }
   end
-
-  def over_reverse_merge!(hsh)
-    reject! { |k, v| v.nil? }.reverse_merge!(hsh)
-  end
 end # Hash
 
 class Decoder
@@ -76,8 +72,12 @@ unless $0 == "irb"
     end.let do |options|
       options.reverse_merge!(Encoder::DEFAULTS)
 
+      raise ArgumentError if options[:filename].nil?
+
       Encoder.run(options[:filename], options)
     end
+  rescue ArgumentError
+    $stdout << "Missing -f\n"
   rescue => e
     $stdout << "#{e}\n"
   end
