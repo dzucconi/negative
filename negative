@@ -35,7 +35,7 @@ class Encoder
     def output(i, options={})
       encode(i).let do |encoded|
         File.open("#{DIR}/#{options[:output]}", "w") do |file|
-          file << Decoder::DECODER % encoded
+          file << (options[:reader] ? Decoder::DECODER % encoded : encoded)
         end
 
         $stdout << "Output: #{options[:output]}\n"
