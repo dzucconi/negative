@@ -9,9 +9,7 @@ begin
   encoded   = File.read(input).unpack("C*").map { |x| " " * x }.join("\n")
   reader    = %q{eval("%s".split(/\n/).map(&:size).pack("C*"))}
 
-  File.open(dir + "/_#{input}", "w") do |f|
-    f << reader % encoded
-  end
+  File.open(dir + "/_#{input}", "w") { |f| f << reader % encoded }
 
   puts "Output: _#{input}"
 rescue ArgumentError
