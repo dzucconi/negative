@@ -23,8 +23,6 @@ class Decoder
 end # Decoder
 
 class Encoder
-  DIR = File.dirname(File.expand_path(__FILE__))
-
   DEFAULTS = { output: "output.rb", reader: true }
 
   class << self
@@ -34,7 +32,8 @@ class Encoder
 
     def output(i, options={})
       encode(i).let do |encoded|
-        File.open("#{DIR}/#{options[:output]}", "w") do |file|
+        File.open("#{File.dirname(File.expand_path(__FILE__))}/#{options[:output]}",
+                  "w") do |file|
           file << (options[:reader] ? Decoder::DECODER % encoded : encoded)
         end
 
