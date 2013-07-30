@@ -65,11 +65,11 @@ unless $0 == "irb"
         opts.banner = "Usage: ./negative [OPTION]...\n\nEncode .rb files as whitespace"
 
         [
-          ["-f", "--filename [FILENAME]", String, "Input filename", :filename],
-          ["-o", "--output [FILENAME]", String, "Ouput filename", :output],
-          ["-i", "--input [FILENAME]", String, "Specify input with input mode", :input],
-          ["-z", "--[no-]reader", "Include reader", :reader],
-          ["-x", "--[no-]executable", "Output is executable", :executable]
+          ["-f", "--filename [FILENAME]", String, "input filename", :filename],
+          ["-o", "--output [FILENAME]", String, "ouput filename", :output],
+          ["-i", "--[no-]input", "use -f as an input to eval", :input],
+          ["-z", "--[no-]reader", "include reader", :reader],
+          ["-x", "--[no-]executable", "output is executable", :executable]
         ].
 
         each do |args|
@@ -83,12 +83,11 @@ unless $0 == "irb"
     end.let do |options|
       options.reverse_merge!(Encoder::DEFAULTS)
 
-      if options[:input].nil?
-        raise ArgumentError if options[:filename].nil?
-
-        Encoder.run(options[:filename], options)
+      raise ArgumentError if options[:filename].nil?
+      if options[:input]
+        Decoder.run(options[:filename])
       else
-        Decoder.run(options[:input])
+        Encoder.run(options[:filename], options)
       end
     end
   rescue ArgumentError
