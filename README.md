@@ -1,5 +1,3 @@
-# Negative
-
 ```bash
 Usage: ./negative [OPTION]...
 
