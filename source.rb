@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 require "optparse"
 
 class Object
@@ -52,7 +50,7 @@ unless $0 == "irb"
   begin
     {}.tap do |options|
       OptionParser.new do |opts|
-        opts.banner = "Usage: ruby negative [OPTION]...\n\nEncode .rb files as whitespace"
+        opts.banner = "Usage: ./negative [OPTION]...\n\nEncode .rb files as whitespace"
 
         [
           ["-f", "--filename [FILENAME]", String, "Input filename", :filename],

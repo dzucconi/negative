@@ -1,5 +1,5 @@
 ```bash
-Usage: ruby negative [OPTION]...
+Usage: ./negative [OPTION]...
 
 Encode .rb files as whitespace
     -f, --filename [FILENAME]        Input filename
