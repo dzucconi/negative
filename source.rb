@@ -74,7 +74,7 @@ unless $0 == "irb"
       Encoder.run(options[:filename], options)
     end
   rescue ArgumentError
-    $stdout << "Missing -f\n"
+    $stdout << "Missing --filename\n"
   rescue => e
     $stdout << "#{e}\n"
   end
