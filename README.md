@@ -6,3 +6,24 @@ Encode .rb files as whitespace
     -o, --output [FILENAME]          Ouput filename
     -z, --[no-]reader                Include reader
 ```
+
+```ruby
+eval("                                                                                                                
+                                                                                                                     
+                                                                                                                    
+                                                                                                                   
+                                
+                                  
+                                                                              
+                                                                                                               
+                                
+                                                                                                      
+                                                                                                                     
+                                                                                                                    
+                                                                                                                     
+                                                                                                                  
+                                                                                                     
+                                              
+                                  ".split(/\n/).map(&:size).pack("C*"))
+# => No future.
+```
