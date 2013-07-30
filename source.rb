@@ -13,10 +13,21 @@ class Hash
 end # Hash
 
 class Decoder
+  SHEBANG = "#!/usr/bin/env ruby\n"
   DECODER = %q{eval("%s".split(/\n/).map(&:size).pack("C*"))}
 
-  def self.decode(i)
-    i.split(/\n/).map(&:size).pack("C*")
+  class << self
+    def decode(i)
+      i.split(/\n/).map(&:size).pack("C*")
+    end
+
+    def run(i)
+      begin
+        eval(decode(File.read(i)))
+      rescue Exception
+        $stdout << "Failed.\n"
+      end
+    end
   end
 end # Decoder
 
@@ -32,7 +43,8 @@ class Encoder
       encode(i).let do |encoded|
         File.open("#{File.dirname(File.expand_path(__FILE__))}/#{options[:output]}",
                   "w") do |file|
-          file << (options[:reader] ? Decoder::DECODER % encoded : encoded)
+          file << (options[:executable] ? Decoder::SHEBANG : nil)
+          file << (options[:reader]     ? Decoder::DECODER % encoded : encoded)
         end
 
         $stdout << "Output: #{options[:output]}\n"
@@ -55,7 +67,9 @@ unless $0 == "irb"
         [
           ["-f", "--filename [FILENAME]", String, "Input filename", :filename],
           ["-o", "--output [FILENAME]", String, "Ouput filename", :output],
-          ["-z", "--[no-]reader", "Include reader", :reader]
+          ["-i", "--input [FILENAME]", String, "Specify input with input mode", :input],
+          ["-z", "--[no-]reader", "Include reader", :reader],
+          ["-x", "--[no-]executable", "Output is executable", :executable]
         ].
 
         each do |args|
@@ -69,9 +83,13 @@ unless $0 == "irb"
     end.let do |options|
       options.reverse_merge!(Encoder::DEFAULTS)
 
-      raise ArgumentError if options[:filename].nil?
+      if options[:input].nil?
+        raise ArgumentError if options[:filename].nil?
 
-      Encoder.run(options[:filename], options)
+        Encoder.run(options[:filename], options)
+      else
+        Decoder.run(options[:input])
+      end
     end
   rescue ArgumentError
     $stdout << "Missing --filename\n"
