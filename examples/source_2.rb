@@ -1,1 +1,2 @@
-puts (1..100).map{|b|c=[b%3<1?:fizz:"",b%5<1?:buzz:""]*"";c==""?b:c}.join("\n")
+1.upto(100){|n|puts'FizzBuzz
+'[o=n**4%-15,o+13]||n}
