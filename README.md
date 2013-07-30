@@ -2,11 +2,11 @@
 Usage: ./negative [OPTION]...
 
 Encode .rb files as whitespace
-    -f, --filename [FILENAME]        Input filename
-    -o, --output [FILENAME]          Ouput filename
-    -i, --input [FILENAME]           Specify input with input mode
-    -z, --[no-]reader                Include reader
-    -x, --[no-]executable            Output is executable
+    -f, --filename [FILENAME]        input filename
+    -o, --output [FILENAME]          ouput filename
+    -i, --[no-]input                 use -f as an input to eval
+    -z, --[no-]reader                include reader
+    -x, --[no-]executable            output is executable
 ```
 
 ```ruby
